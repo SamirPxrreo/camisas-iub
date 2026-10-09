@@ -5,6 +5,15 @@ Aplicación web responsive para el registro de ventas de camisas de Samir y Vale
 con abonos, abonos del proveedor (Yesenia, bordado), liquidaciones 50/50, historial,
 resúmenes, reportes y gestión de usuarios. Conecta a la base real Supabase.
 
+## URL en vivo
+
+Hosteado en GitHub Pages (público, sin necesidad de servidor local):
+
+**https://samirpxrreo.github.io/camisas-iub/**
+
+El login es obligatorio (usa una cuenta real del proyecto Supabase). Cada push a `main`
+redespliega automáticamente.
+
 ## Cómo ejecutar el prototipo
 
 Requisitos: Node.js ≥ 14 (opcional, solo para el servidor local).
