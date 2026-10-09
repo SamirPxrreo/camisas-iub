@@ -1,0 +1,17 @@
+# Open Design (contexto interno, no se sube)
+.file-versions/
+.od-frames/
+.od-skills/
+index.html.artifact.json
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Temporales
+*.log

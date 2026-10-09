@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="es-CO" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<meta name="description" content="Camisas IUB — Registro de ventas, pedidos y resumen del día.">
+<title>Camisas IUB — Registro de ventas</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230E7C86'/%3E%3Cpath d='M9 11h14M9 16h14M9 21h9' stroke='white' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<a class="saltar" href="#contenido">Saltar al contenido</a>
+
+<header class="topbar">
+  <div class="marca">
+    <span class="marca-logo" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 8.5 12 4l8 4.5v7L12 20l-8-4.5z"/>
+        <path d="M8 10.5v5M12 8.5v8M16 10.5v5"/>
+      </svg>
+    </span>
+    <span class="marca-texto">
+      <strong>Camisas IUB</strong>
+      <small>Registro de ventas</small>
+    </span>
+  </div>
+
+  <div class="topbar-acciones">
+    <button class="usuario" id="usuario-chip" type="button" aria-haspopup="dialog" title="Necesitas iniciar sesión para usar la base real">
+      <span class="usuario-punto" id="usuario-punto" aria-hidden="true"></span>
+      <span id="usuario-nombre">Iniciar sesión</span>
+      <span class="usuario-rol" id="usuario-rol">Cuenta requerida</span>
+    </button>
+    <button class="icono-btn" id="btn-salir" type="button" aria-label="Cerrar sesión" title="Cerrar sesión" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 4h2.5A1.5 1.5 0 0 1 19 5.5v13a1.5 1.5 0 0 1-1.5 1.5H15"/><path d="M10 8l-4 4 4 4M6 12h9"/>
+      </svg>
+    </button>
+    <button class="icono-btn" id="cambiar-tema" type="button" aria-label="Cambiar entre tema claro y oscuro" title="Cambiar tema" aria-pressed="false">
+      <svg class="ico-sol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <circle cx="12" cy="12" r="4.1"/>
+        <path d="M12 2.6v2.3M12 19.1v2.3M2.6 12h2.3M19.1 12h2.3M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"/>
+      </svg>
+      <svg class="ico-luna" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 14.4A8.2 8.2 0 0 1 9.6 4a8.4 8.4 0 1 0 10.4 10.4Z"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<div class="banner-conexion" id="banner-conexion" role="status" hidden>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h.01"/><path d="M5 12.5a10 10 0 0 1 14 0"/><path d="M8.5 16a5 5 0 0 1 7 0"/><path d="M2 8.5a15 15 0 0 1 20 0"/></svg>
+  <span id="banner-conexion-texto">Sin conexión: puedes seguir escribiendo, pero no se guardará en la nube.</span>
+</div>
+
+<div class="layout">
+  <nav class="nav" id="nav" aria-label="Navegación principal">
+    <span class="nav-ind" id="nav-ind" aria-hidden="true"></span>
+    <button class="nav-item is-active" data-vista="inicio" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M4 13.2 12 5l8 8.2"/><path d="M6 11.5V19h12v-7.5"/><path d="M10 19v-4.4h4V19"/>
+      </svg>
+      <span>Inicio</span>
+    </button>
+    <button class="nav-item" data-vista="pedidos" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="4.5" y="5" width="15" height="16" rx="2.5"/><path d="M9 5V4.2A1.7 1.7 0 0 1 10.7 2.5h2.6A1.7 1.7 0 0 1 15 4.2V5"/><path d="M8.5 11h7M8.5 15h4.5"/>
+      </svg>
+      <span>Pedidos</span>
+      <span class="nav-badge" id="nav-badge" hidden>0</span>
+    </button>
+    <button class="nav-item nav-item-cta" data-vista="registro" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true">
+        <path d="M12 5v14M5 12h14"/>
+      </svg>
+      <span>Registrar</span>
+    </button>
+    <!-- Sección "más": en el celular va en una hoja, en escritorio se despliega en la barra lateral -->
+    <button class="nav-item nav-item-mas" data-vista="__mas" type="button" aria-haspopup="true" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true">
+        <circle cx="6" cy="12" r="1.4" fill="currentColor" stroke="none"/>
+        <circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/>
+        <circle cx="18" cy="12" r="1.4" fill="currentColor" stroke="none"/>
+      </svg>
+      <span>Más</span>
+    </button>
+    <!-- Vistas secundarias: se muestran en escritorio dentro de la barra lateral -->
+    <div class="nav-secundario" id="nav-secundario">
+      <p class="nav-grupo">Principal</p>
+      <button class="nav-item nav-sub" data-vista="inicio" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 13.2 12 5l8 8.2"/><path d="M6 11.5V19h12v-7.5"/><path d="M10 19v-4.4h4V19"/>
+        </svg>
+        <span>Inicio</span>
+      </button>
+      <button class="nav-item nav-sub" data-vista="pedidos" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="4.5" y="5" width="15" height="16" rx="2.5"/><path d="M9 5V4.2A1.7 1.7 0 0 1 10.7 2.5h2.6A1.7 1.7 0 0 1 15 4.2V5"/><path d="M8.5 11h7M8.5 15h4.5"/>
+        </svg>
+        <span>Pedidos</span>
+        <span class="nav-badge" id="nav-badge-desktop" hidden>0</span>
+      </button>
+      <button class="nav-item nav-sub" data-vista="registro" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true">
+          <path d="M12 5v14M5 12h14"/>
+        </svg>
+        <span>Nueva venta</span>
+      </button>
+      <button class="nav-item nav-sub" data-vista="cuentas" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3.5" y="5.5" width="17" height="13" rx="2.2"/><path d="M3.5 10h17"/><path d="M7 14.5h4"/>
+        </svg>
+        <span>Cuentas</span>
+      </button>
+      <p class="nav-grupo">Socios</p>
+      <button class="nav-item nav-sub" data-vista="proveedor" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3.5 8.5 12 4l8.5 4.5v7L12 20l-8.5-4.5z"/><path d="M12 11.5v5M9 13.5h6"/>
+        </svg>
+        <span>Abonos Yesenia</span>
+      </button>
+      <button class="nav-item nav-sub" data-vista="liquidaciones" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M7 4.5 3.5 8 7 11.5M17 4.5 20.5 8 17 11.5M3.5 8h17"/><path d="M13.5 13 10.5 16l3 3"/>
+        </svg>
+        <span>Liquidaciones</span>
+      </button>
+      <p class="nav-grupo">Datos</p>
+      <button class="nav-item nav-sub" data-vista="historial" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3.5 4.5V9H8"/><path d="M12 8v4.3l3 1.8"/>
+        </svg>
+        <span>Historial</span>
+      </button>
+      <button class="nav-item nav-sub" data-vista="resumenes" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4.5 20V10M10 20V4M15.5 20v-7M21 20H3"/>
+        </svg>
+        <span>Resúmenes</span>
+      </button>
+      <button class="nav-item nav-sub" data-vista="reportes" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5.5 3.5h8L19 9v11.5a1 1 0 0 1-1 1H5.5a1 1 0 0 1-1-1v-16a1 1 0 0 1 1-1Z"/><path d="M13.5 3.5V9H19"/><path d="M8 13h7M8 16.5h7"/>
+        </svg>
+        <span>Reportes</span>
+      </button>
+      <p class="nav-grupo" id="nav-grupo-sistema" hidden>Sistema</p>
+      <button class="nav-item nav-sub" data-vista="usuarios" type="button" id="nav-usuarios" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="9" cy="8" r="3.2"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0"/><path d="M16 5.5a3 3 0 0 1 0 5.6M17.5 20a5.5 5.5 0 0 0-2.2-4.4"/>
+        </svg>
+        <span>Usuarios</span>
+      </button>
+      <button class="nav-item nav-sub" data-vista="papelera" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4.5 7h15M9.5 7V5.2a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1V7"/><path d="M6.5 7l.8 12a1 1 0 0 0 1 .9h7.4a1 1 0 0 0 1-.9l.8-12"/>
+        </svg>
+        <span>Papelera</span>
+        <span class="nav-badge nav-badge-alerta" id="papelera-badge" hidden>0</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="contenido" id="contenido">
+
+    <!-- ── INICIO ─────────────────────────────────────── -->
+    <section class="vista is-active" id="vista-inicio" data-od-id="inicio" aria-labelledby="t-inicio">
+      <div class="encabezado">
+        <div>
+          <h1 class="titulo-vista" id="t-inicio">Inicio</h1>
+          <p class="subtitulo" id="saludo-dia">El control de las ventas, en un vistazo.</p>
+        </div>
+        <div class="periodo" role="tablist" aria-label="Período del resumen">
+          <button class="periodo-op is-active" data-periodo="hoy" role="tab" type="button" aria-selected="true">Hoy</button>
+          <button class="periodo-op" data-periodo="7" role="tab" type="button" aria-selected="false">7 días</button>
+          <button class="periodo-op" data-periodo="30" role="tab" type="button" aria-selected="false">30 días</button>
+          <button class="periodo-op" data-periodo="todo" role="tab" type="button" aria-selected="false">Todo</button>
+        </div>
+      </div>
+
+      <div class="kpis" id="kpis-inicio"></div>
+
+      <div class="panel">
+        <div class="panel-cabeza">
+          <h2 class="panel-titulo">Venta de los últimos 7 días</h2>
+          <span class="panel-nota" id="chart-nota"></span>
+        </div>
+        <div class="grafico" id="grafico-7d" role="img" aria-label="Venta por día de los últimos 7 días"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-cabeza">
+          <h2 class="panel-titulo">Próximas entregas</h2>
+          <button class="btn-texto" type="button" data-ir="pedidos">Ver pedidos</button>
+        </div>
+        <div id="proximas-entregas"></div>
+      </div>
+    </section>
+
+    <!-- ── PEDIDOS ────────────────────────────────────── -->
+    <section class="vista" id="vista-pedidos" data-od-id="pedidos" aria-labelledby="t-pedidos">
+      <div class="encabezado">
+        <div>
+          <h1 class="titulo-vista" id="t-pedidos">Pedidos</h1>
+          <p class="subtitulo">Consulta, filtra y administra cada venta.</p>
+        </div>
+        <button class="btn btn-primaria" type="button" data-ir="registro">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          Nueva venta
+        </button>
+      </div>
+
+      <div class="segmento" role="tablist" aria-label="Tipo de pedidos">
+        <button class="segmento-op is-active" data-grupo="activos" role="tab" type="button" aria-selected="true">Activos</button>
+        <button class="segmento-op" data-grupo="finalizados" role="tab" type="button" aria-selected="false">Historial</button>
+        <button class="segmento-op" data-grupo="todos" role="tab" type="button" aria-selected="false">Todos</button>
+      </div>
+
+      <div class="filtros">
+        <label class="campo filtro-buscar">
+          <span class="oculto-visual">Buscar pedidos</span>
+          <input type="search" id="filtro-busqueda" placeholder="Buscar por cliente, teléfono, vendedor o ID…" autocomplete="off">
+        </label>
+        <label class="campo">
+          <span class="oculto-visual">Filtrar por vendedor</span>
+          <select id="filtro-vendedor"><option value="">Todos los vendedores</option></select>
+        </label>
+        <label class="campo">
+          <span class="oculto-visual">Filtrar por estado</span>
+          <select id="filtro-estado"><option value="">Todos los estados</option></select>
+        </label>
+      </div>
+
+      <p class="resumen" id="pedidos-resumen" role="status"></p>
+
+      <div class="tabla-wrap" id="pedidos-tabla-wrap">
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th scope="col">Fecha</th>
+              <th scope="col">Cliente</th>
+              <th scope="col">Camisas</th>
+              <th scope="col" class="num">Cant.</th>
+              <th scope="col" class="num">Venta</th>
+              <th scope="col" class="num">Saldo</th>
+              <th scope="col">Entrega</th>
+              <th scope="col">Estado</th>
+              <th scope="col"><span class="oculto-visual">Acciones</span></th>
+            </tr>
+          </thead>
+          <tbody id="pedidos-cuerpo"></tbody>
+        </table>
+      </div>
+      <div class="tarjetas" id="pedidos-tarjetas"></div>
+      <div class="vacio" id="pedidos-vacio" hidden></div>
+    </section>
+
+    <!-- ── REGISTRO ───────────────────────────────────── -->
+    <section class="vista" id="vista-registro" data-od-id="registro" aria-labelledby="t-registro">
+      <div class="encabezado">
+        <div>
+          <h1 class="titulo-vista" id="t-registro">Registrar venta</h1>
+          <p class="subtitulo">Cada fila es un tipo de camisa. El estado lo lleva cada camisa.</p>
+        </div>
+        <button class="btn btn-fantasma" id="limpiar-venta" type="button">Empezar de nuevo</button>
+      </div>
+
+      <form id="form-venta" novalidate autocomplete="off">
+        <p class="alerta" id="venta-errores" role="alert" hidden></p>
+
+        <div class="rejilla">
+          <section class="bloque">
+            <h2 class="bloque-titulo">Cliente</h2>
+            <div class="campos">
+              <label class="campo">
+                <span class="campo-etiqueta">Nombre <b class="req" aria-hidden="true">*</b></span>
+                <input id="f-cliente" type="text" autocomplete="name" placeholder="Nombre del cliente">
+              </label>
+              <label class="campo">
+                <span class="campo-etiqueta">Teléfono o @usuario</span>
+                <input id="f-telefono" type="tel" inputmode="tel" autocomplete="tel" placeholder="300 000 0000">
+              </label>
+            </div>
+          </section>
+
+          <section class="bloque bloque-camisas">
+            <div class="bloque-cabeza">
+              <h2 class="bloque-titulo">Camisas <span class="contador" id="camisa-total">0</span></h2>
+              <button class="btn btn-fantasma" id="camisa-mas" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                Agregar camisa
+              </button>
+            </div>
+            <div class="camisa-cabecera" aria-hidden="true">
+              <span>Modelo</span><span>Género</span><span>Color</span><span>Talla</span><span class="num">Precio</span><span class="num">Cant.</span><span></span>
+            </div>
+            <div id="camisa-items" class="camisa-items"></div>
+          </section>
+
+          <section class="bloque">
+            <h2 class="bloque-titulo">Entrega</h2>
+            <div class="campos">
+              <label class="campo">
+                <span class="campo-etiqueta">Fecha del pedido</span>
+                <input id="f-fecha" type="date">
+              </label>
+              <label class="campo">
+                <span class="campo-etiqueta">Fecha de entrega</span>
+                <input id="f-fecha-entrega" type="date">
+              </label>
+              <label class="check-linea campo-ancho">
+                <input id="f-entrega-pendiente" type="checkbox">
+                <span>La fecha de entrega está por definir</span>
+              </label>
+              <label class="campo">
+                <span class="campo-etiqueta">Lugar de entrega</span>
+                <select id="f-lugar"></select>
+              </label>
+              <label class="campo campo-ancho" id="f-lugar-otro-wrap" hidden>
+                <span class="campo-etiqueta">Escribe el lugar</span>
+                <input id="f-lugar-otro" type="text" placeholder="Otro lugar" disabled>
+              </label>
+              <label class="campo campo-ancho">
+                <span class="campo-etiqueta">Quién entrega</span>
+                <input id="f-entrega-por" type="text" list="lista-vendedores" placeholder="Nombre de quien entrega">
+              </label>
+            </div>
+          </section>
+
+          <section class="bloque">
+            <h2 class="bloque-titulo">Venta</h2>
+            <div class="campos">
+              <label class="campo">
+                <span class="campo-etiqueta">Vendedor</span>
+                <select id="f-vendedor"></select>
+              </label>
+              <label class="campo">
+                <span class="campo-etiqueta">Estado inicial</span>
+                <select id="f-estado"></select>
+              </label>
+              <label class="campo">
+                <span class="campo-etiqueta">Abono inicial <small>(opcional)</small></span>
+                <input id="f-abono" type="number" inputmode="numeric" min="0" step="1000" placeholder="0">
+              </label>
+              <label class="campo campo-ancho">
+                <span class="campo-etiqueta">Nota</span>
+                <textarea id="f-nota" rows="2" placeholder="Algo que recordar del pedido"></textarea>
+              </label>
+            </div>
+          </section>
+        </div>
+
+        <div class="totales">
+          <div class="totales-nums">
+            <div class="total-item"><span>Camisas</span><b id="t-camisas">0</b></div>
+            <div class="total-item"><span>Venta</span><b id="t-venta">$0</b></div>
+            <div class="total-item"><span>Costo Yesenia</span><b id="t-costo">$0</b></div>
+            <div class="total-item"><span>Abono</span><b id="t-abono">$0</b></div>
+            <div class="total-item total-ganancia"><span>Ganancia</span><b id="t-ganancia">$0</b></div>
+          </div>
+          <button class="btn btn-primaria btn-guardar" type="submit" id="guardar-venta">Registrar pedido</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ── CUENTAS ──────────────────────────────────────────── -->
+    <section class="vista" id="vista-cuentas" data-od-id="cuentas" aria-labelledby="t-cuentas">
+      <div class="encabezado">
+        <div>
+          <h1 class="titulo-vista" id="t-cuentas">Cuentas</h1>
+          <p class="subtitulo">Cuánto se ha cobrado y cuánto debe cada cliente.</p>
+        </div>
+      </div>
+
+      <div class="kpis kpis-3" id="kpis-cuentas"></div>
+
+      <div class="filtros">
+        <label class="campo filtro-buscar">
+          <span class="oculto-visual">Buscar clientes</span>
+          <input type="search" id="filtro-cuentas" placeholder="Buscar por cliente, teléfono o vendedor…" autocomplete="off">
+        </label>
+      </div>
+
+      <p class="resumen" id="cuentas-resumen" role="status"></p>
+
+      <div class="tabla-wrap">
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th scope="col">Cliente</th>
+              <th scope="col" class="num">Pedidos</th>
+              <th scope="col" class="num">Camisas</th>
+              <th scope="col" class="num">Vendido</th>
+              <th scope="col" class="num">Abonado</th>
+              <th scope="col" class="num">Saldo</th>
+              <th scope="col"><span class="oculto-visual">Acciones</span></th>
+            </tr>
+          </thead>
+          <tbody id="cuentas-cuerpo"></tbody>
+        </table>
+      </div>
+      <div class="tarjetas" id="cuentas-tarjetas"></div>
+      <div class="vacio" id="cuentas-vacio" hidden></div>
+    </section>
+
+    <!-- ── PROVEEDOR ────────────────────────────────────────── -->
+    <section class="vista" id="vista-proveedor" data-od-id="proveedor" aria-labelledby="t-proveedor">
+      <div class="encabezado">
+        <div>
+          <h1 class="titulo-vista" id="t-proveedor">Abonos a Yesenia</h1>
+          <p class="subtitulo">Cada visita agrupa pedidos y lo que se le pagó al proveedor en esa visita.</p>
+        </div>
+        <button class="btn btn-primaria" type="button" id="nueva-visita">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          Nueva visita
+        </button>
+      </div>
+
+      <div class="kpis kpis-3" id="kpis-proveedor"></div>
+
+      <div class="panel">
+        <div class="panel-cabeza">
+          <h2 class="panel-titulo">Visitas</h2>
+        </div>
+        <div id="visitas-lista"></div>
+      </div>
+    </section>
+
+    <!-- ── LIQUIDACIONES ────────────────────────────────────── -->
+    <section class="vista" id="vista-liquidaciones" data-od-id="liquidaciones" aria-labelledby="t-liquidaciones">
+      <div class="encabezado">
+        <div>
+          <h1 class="titulo-vista" id="t-liquidaciones">Liquidaciones</h1>
+          <p class="subtitulo">La mitad de la ganancia de cada pedido se reparte entre los dos socios.</p>
+        </div>
+        <button class="btn btn-primaria" type="button" id="nueva-liquidacion">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          Registrar pago
+        </button>
+      </div>
+
+      <div class="kpis kpis-2" id="kpis-liquidaciones"></div>
+
+      <p class="nota-regla" id="nota-perdidas" hidden></p>
+
+      <div class="panel">
+        <div class="panel-cabeza">
+          <h2 class="panel-titulo">Pagos registrados</h2>
+          <span class="panel-nota" id="liq-nota"></span>
+        </div>
+        <div class="tabla-wrap tabla-wrap-plana">
+          <table class="tabla">
+            <thead>
+              <tr>
+                <th scope="col">Fecha</th>
+                <th scope="col">Pedido</th>
+                <th scope="col">Pagador</th>
+                <th scope="col">Receptor</th>
+                <th scope="col" class="num">Monto</th>
+                <th scope="col"><span class="oculto-visual">Acciones</span></th>
+              </tr>
+            </thead>
+            <tbody id="liq-cuerpo"></tbody>
+          </table>
+        </div>
+        <div class="vacio" id="liq-vacio" hidden></div>
+      </div>
+    </section>
+
+    <!-- ── REPORTES ─────────────────────────────────────────── -->
+    <section class="vista" id="vista-reportes" data-od-id="reportes" aria-labelledby="t-reportes">
+      <div class="encabezado">
+        <div>
+          <h1 class="titulo-vista" id="t-reportes">Reportes</h1>
+          <p class="subtitulo">Descargar a Excel, o imprimir la factura de un cliente.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-cabeza">
+          <h2 class="panel-titulo">Lista de compra</h2>
+          <span class="panel-nota">Para llevar a la bodega</span>
+        </div>
+        <p class="panel-texto">Agrupa por género, color, talla y versión. Dice cuántas camisas hay que comprar y qué se espera vender.</p>
+        <button class="btn btn-primaria" type="button" id="exp-compra">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5"/><path d="M5 19h14"/></svg>
+          Descargar Excel de compra
+        </button>
+      </div>
+
+      <div class="panel">
+        <div class="panel-cabeza">
+          <h2 class="panel-titulo">Reporte completo</h2>
+          <span class="panel-nota">Una fila por camisa</span>
+        </div>
+        <p class="panel-texto">Venta, costo, abono, saldos y ganancia de cada camisa, con fórmulas vivas dentro del Excel.</p>
+        <button class="btn btn-fantasma" type="button" id="exp-completo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5"/><path d="M5 19h14"/></svg>
+          Descargar reporte completo
+        </button>
+      </div>
+
+      <div class="panel">
+        <div class="panel-cabeza">
+          <h2 class="panel-titulo">Listado de pedidos</h2>
+          <span class="panel-nota">Una fila por pedido</span>
+        </div>
+        <p class="panel-texto">Fecha, cliente, contacto, camisas, venta, abonos, saldo y estado. Ideal para revisar o compartir.</p>
+        <button class="btn btn-fantasma" type="button" id="exp-pedidos">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5"/><path d="M5 19h14"/></svg>
+          Descargar listado de pedidos
+        </button>
+      </div>
+
+      <div class="panel">
+        <div class="panel-cabeza">
+          <h2 class="panel-titulo">Factura de un cliente</h2>
+        </div>
+        <p class="panel-texto">Elige el cliente y marca qué camisas van en la factura. Se abre lista para imprimir o guardar como PDF.</p>
+        <div class="campos">
+          <label class="campo">
+            <span class="campo-etiqueta">Cliente</span>
+            <select id="factura-cliente"></select>
+          </label>
+        </div>
+        <button class="btn btn-fantasma btn-ancho" type="button" id="abrir-factura" style="margin-top:var(--s3)">
+          Armar factura
+        </button>
+      </div>
+    </section>
+
+    <!-- ── HISTORIAL ────────────────────────────────────────── -->
+    <section class="vista" id="vista-historial" data-od-id="historial" aria-labelledby="t-historial">
+      <div class="encabezado">
+        <div>
+          <h1 class="titulo-vista" id="t-historial">Historial</h1>
+          <p class="subtitulo">Pedidos finalizados: entregados y liquidados.</p>
+        </div>
+      </div>
+
+      <div class="filtros">
+        <label class="campo filtro-buscar">
+          <span class="oculto-visual">Buscar en el historial</span>
+          <input type="search" id="historial-busqueda" placeholder="Buscar por cliente, teléfono o ID…" autocomplete="off">
+        </label>
+      </div>
+
+      <p class="resumen" id="historial-resumen" role="status"></p>
+      <div class="panel">
+        <div id="historial-lista"></div>
+      </div>
+    </section>
+
+    <!-- ── RESÚMENES ────────────────────────────────────────── -->
+    <section class="vista" id="vista-resumenes" data-od-id="resumenes" aria-labelledby="t-resumenes">
+      <div class="encabezado">
+        <div>
+          <h1 class="titulo-vista" id="t-resumenes">Resúmenes</h1>
+          <p class="subtitulo">Totales por período, vendedor y cliente.</p>
+        </div>
+        <div class="periodo" role="tablist" aria-label="Período del resumen">
+          <button class="periodo-op is-active" data-res-periodo="7" role="tab" type="button" aria-selected="true">7 días</button>
+          <button class="periodo-op" data-res-periodo="30" role="tab" type="button" aria-selected="false">30 días</button>
+          <button class="periodo-op" data-res-periodo="todo" role="tab" type="button" aria-selected="false">Todo</button>
+        </div>
+      </div>
+
+      <div class="kpis" id="resumenes-kpis"></div>
+
+      <div class="panel">
+        <div class="panel-cabeza"><h2 class="panel-titulo">Por día</h2></div>
+        <div class="tabla-wrap">
+          <table class="tabla">
+            <thead>
+              <tr><th scope="col">Día</th><th scope="col" class="num">Pedidos</th><th scope="col" class="num">Camisas</th><th scope="col" class="num">Venta</th><th scope="col" class="num">Abonos</th></tr>
+            </thead>
+            <tbody id="resumenes-dias"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="rejilla-dos">
+        <div class="panel">
+          <div class="panel-cabeza"><h2 class="panel-titulo">Por vendedor</h2></div>
+          <div id="resumenes-vendedores"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-cabeza"><h2 class="panel-titulo">Clientes con más deuda</h2></div>
+          <div id="resumenes-clientes"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── USUARIOS (admin) ─────────────────────────────────── -->
+    <section class="vista" id="vista-usuarios" data-od-id="usuarios" aria-labelledby="t-usuarios">
+      <div class="encabezado">
+        <div>
+          <h1 class="titulo-vista" id="t-usuarios">Usuarios</h1>
+          <p class="subtitulo">Quién puede entrar y con qué rol.</p>
+        </div>
+        <button class="btn btn-primaria" id="nuevo-usuario" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          Nuevo usuario
+        </button>
+      </div>
+
+      <p class="alerta alerta-info" id="usuarios-aviso" role="status" hidden></p>
+      <div class="tabla-wrap">
+        <table class="tabla">
+          <thead>
+            <tr><th scope="col">Nombre</th><th scope="col">Correo</th><th scope="col">Rol</th><th scope="col"><span class="oculto-visual">Acciones</span></th></tr>
+          </thead>
+          <tbody id="usuarios-cuerpo"></tbody>
+        </table>
+      </div>
+      <div class="vacio" id="usuarios-vacio" hidden></div>
+    </section>
+
+    <!-- ── PAPELERA ─────────────────────────────────────────── -->
+    <section class="vista" id="vista-papelera" data-od-id="papelera" aria-labelledby="t-papelera">
+      <div class="encabezado">
+        <div>
+          <h1 class="titulo-vista" id="t-papelera">Papelera</h1>
+          <p class="subtitulo">Pedidos que eliminaste. Todavía se pueden recuperar.</p>
+        </div>
+        <button class="btn btn-fantasma" id="vaciar-papelera" type="button">Vaciar papelera</button>
+      </div>
+
+      <div class="panel">
+        <div id="papelera-lista"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<datalist id="lista-vendedores"></datalist>
+
+<!-- ── Hoja "Más" (celular) ───────────────────────────────── -->
+<div class="capa" id="capa-mas" hidden>
+  <div class="hoja hoja-compacta" role="dialog" aria-modal="true" aria-labelledby="mas-titulo">
+    <div class="hoja-cabeza">
+      <div class="hoja-arrastre" aria-hidden="true"></div>
+      <h2 class="hoja-titulo" id="mas-titulo">Ir a</h2>
+      <button class="icono-btn" id="cerrar-mas" type="button" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="hoja-cuerpo">
+      <button class="mas-item" type="button" data-vista="cuentas">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="2.2"/><path d="M3.5 10h17"/><path d="M7 14.5h4"/></svg>
+        <span class="mas-item-texto"><b>Cuentas</b><small>Cuánto debe cada cliente</small></span>
+      </button>
+      <button class="mas-item" type="button" data-vista="proveedor">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5 12 4l8.5 4.5v7L12 20l-8.5-4.5z"/><path d="M12 11.5v5M9 13.5h6"/></svg>
+        <span class="mas-item-texto"><b>Abonos Yesenia</b><small>Lo que se le ha pagado al proveedor</small></span>
+      </button>
+      <button class="mas-item" type="button" data-vista="liquidaciones">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4.5 3.5 8 7 11.5M17 4.5 20.5 8 17 11.5M3.5 8h17"/><path d="M13.5 13 10.5 16l3 3"/></svg>
+        <span class="mas-item-texto"><b>Liquidaciones</b><small>Lo que se deben los socios</small></span>
+      </button>
+      <button class="mas-item" type="button" data-vista="historial">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3.5 4.5V9H8"/><path d="M12 8v4.3l3 1.8"/></svg>
+        <span class="mas-item-texto"><b>Historial</b><small>Pedidos finalizados</small></span>
+      </button>
+      <button class="mas-item" type="button" data-vista="resumenes">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 20V10M10 20V4M15.5 20v-7M21 20H3"/></svg>
+        <span class="mas-item-texto"><b>Resúmenes</b><small>Totales por período</small></span>
+      </button>
+      <button class="mas-item" type="button" data-vista="reportes">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.5 3.5h8L19 9v11.5a1 1 0 0 1-1 1H5.5a1 1 0 0 1-1-1v-16a1 1 0 0 1 1-1Z"/><path d="M13.5 3.5V9H19"/><path d="M8 13h7M8 16.5h7"/></svg>
+        <span class="mas-item-texto"><b>Reportes</b><small>Excel y facturas</small></span>
+      </button>
+      <button class="mas-item" type="button" data-vista="usuarios" id="mas-usuarios" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0"/><path d="M16 5.5a3 3 0 0 1 0 5.6M17.5 20a5.5 5.5 0 0 0-2.2-4.4"/></svg>
+        <span class="mas-item-texto"><b>Usuarios</b><small>Roles y accesos</small></span>
+      </button>
+      <button class="mas-item" type="button" data-vista="papelera">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 7h15M9.5 7V5.2a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1V7"/><path d="M6.5 7l.8 12a1 1 0 0 0 1 .9h7.4a1 1 0 0 0 1-.9l.8-12"/></svg>
+        <span class="mas-item-texto"><b>Papelera</b><small>Pedidos eliminados</small></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Buscador global ──────────────────────────────────────── -->
+<div class="capa" id="capa-buscar" hidden>
+  <div class="dialogo dialogo-buscar" role="dialog" aria-modal="true" aria-labelledby="buscar-titulo">
+    <h2 class="oculto-visual" id="buscar-titulo">Buscar en todo</h2>
+    <label class="buscar-caja">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.4"/><path d="M15.8 15.8 20 20"/></svg>
+      <input type="search" id="buscar-input" placeholder="Buscar pedidos, clientes, vendedores…" autocomplete="off" aria-describedby="buscar-ayuda">
+    </label>
+    <p class="buscar-ayuda" id="buscar-ayuda">Escribe para filtrar. <kbd>Esc</kbd> cierra.</p>
+    <div class="buscar-resultados" id="buscar-resultados" role="listbox" aria-label="Resultados"></div>
+  </div>
+</div>
+
+<!-- ── Hoja de detalle / edición ───────────────────────── -->
+<div class="capa" id="capa-detalle" hidden>
+  <div class="hoja" role="dialog" aria-modal="true" aria-labelledby="detalle-titulo" id="hoja-detalle">
+    <div class="hoja-cabeza">
+      <div class="hoja-arrastre" aria-hidden="true"></div>
+      <h2 class="hoja-titulo" id="detalle-titulo">Pedido</h2>
+      <button class="icono-btn" id="cerrar-detalle" type="button" aria-label="Cerrar detalle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="hoja-cuerpo" id="detalle-cuerpo"></div>
+    <div class="hoja-acciones" id="detalle-acciones"></div>
+  </div>
+</div>
+
+<div class="capa" id="capa-aviso" hidden>
+  <div class="dialogo" role="alertdialog" aria-modal="true" aria-labelledby="aviso-titulo">
+    <h2 class="dialogo-titulo" id="aviso-titulo">Confirmar</h2>
+    <p class="dialogo-texto" id="aviso-texto"></p>
+    <div class="dialogo-acciones">
+      <button class="btn btn-fantasma" id="aviso-cancelar" type="button">Cancelar</button>
+      <button class="btn btn-peligro" id="aviso-confirmar" type="button">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Hoja: abono del cliente ────────────────────────────────── -->
+<div class="capa" id="capa-abono" hidden>
+  <div class="hoja" role="dialog" aria-modal="true" aria-labelledby="abono-titulo">
+    <div class="hoja-cabeza">
+      <div class="hoja-arrastre" aria-hidden="true"></div>
+      <h2 class="hoja-titulo" id="abono-titulo">Abono del cliente</h2>
+      <button class="icono-btn" id="cerrar-abono" type="button" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="hoja-cuerpo">
+      <p class="hoja-sub" id="abono-contexto"></p>
+      <label class="campo">
+        <span class="campo-etiqueta">Monto que abona</span>
+        <input id="abono-monto" type="number" inputmode="numeric" min="0" step="1000" placeholder="0">
+      </label>
+      <div class="chips-rapidos" id="abono-chips"></div>
+      <div class="detalle-cifras" id="abono-cifras"></div>
+    </div>
+    <div class="hoja-acciones">
+      <button class="btn btn-fantasma" type="button" id="abono-cancelar">Cancelar</button>
+      <button class="btn btn-primaria" type="button" id="abono-guardar">Registrar abono</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Hoja: visita al proveedor ─────────────────────────────── -->
+<div class="capa" id="capa-visita" hidden>
+  <div class="hoja hoja-ancha" role="dialog" aria-modal="true" aria-labelledby="visita-titulo">
+    <div class="hoja-cabeza">
+      <div class="hoja-arrastre" aria-hidden="true"></div>
+      <h2 class="hoja-titulo" id="visita-titulo">Visita a Yesenia</h2>
+      <button class="icono-btn" id="cerrar-visita" type="button" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="hoja-cuerpo" id="visita-cuerpo"></div>
+    <div class="hoja-acciones">
+      <button class="btn btn-fantasma" type="button" id="visita-cancelar">Cancelar</button>
+      <button class="btn btn-primaria" type="button" id="visita-guardar">Guardar visita</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Hoja: liquidación entre socios ────────────────────────── -->
+<div class="capa" id="capa-liquidacion" hidden>
+  <div class="hoja" role="dialog" aria-modal="true" aria-labelledby="liq-titulo">
+    <div class="hoja-cabeza">
+      <div class="hoja-arrastre" aria-hidden="true"></div>
+      <h2 class="hoja-titulo" id="liq-titulo">Pago entre socios</h2>
+      <button class="icono-btn" id="cerrar-liquidacion" type="button" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="hoja-cuerpo">
+      <p class="hoja-sub">Se liquida la mitad de la ganancia del pedido. Las pérdidas no generan deuda.</p>
+      <div class="campos">
+        <label class="campo">
+          <span class="campo-etiqueta">Quién paga</span>
+          <select id="liq-pagador"></select>
+        </label>
+        <label class="campo">
+          <span class="campo-etiqueta">Quién recibe</span>
+          <select id="liq-receptor"></select>
+        </label>
+        <label class="campo campo-ancho">
+          <span class="campo-etiqueta">Pedido</span>
+          <select id="liq-pedido"></select>
+        </label>
+        <label class="campo">
+          <span class="campo-etiqueta">Monto</span>
+          <input id="liq-monto" type="number" inputmode="numeric" min="0" step="1000" placeholder="0">
+        </label>
+        <label class="campo">
+          <span class="campo-etiqueta">Fecha</span>
+          <input id="liq-fecha" type="date">
+        </label>
+        <label class="campo campo-ancho">
+          <span class="campo-etiqueta">Nota</span>
+          <input id="liq-nota-pago" type="text" placeholder="Algo que recordar del pago">
+        </label>
+      </div>
+      <div class="detalle-cifras" id="liq-cifras"></div>
+    </div>
+    <div class="hoja-acciones">
+      <button class="btn btn-fantasma" type="button" id="liq-cancelar">Cancelar</button>
+      <button class="btn btn-primaria" type="button" id="liq-guardar">Registrar pago</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Hoja: factura ─────────────────────────────────────────── -->
+<div class="capa" id="capa-factura" hidden>
+  <div class="hoja hoja-ancha" role="dialog" aria-modal="true" aria-labelledby="factura-titulo">
+    <div class="hoja-cabeza">
+      <div class="hoja-arrastre" aria-hidden="true"></div>
+      <h2 class="hoja-titulo" id="factura-titulo">Factura</h2>
+      <button class="icono-btn" id="cerrar-factura" type="button" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="hoja-cuerpo" id="factura-cuerpo"></div>
+    <div class="hoja-acciones">
+      <button class="btn btn-fantasma" type="button" id="factura-cancelar">Cerrar</button>
+      <button class="btn btn-primaria" type="button" id="factura-generar">Ver e imprimir</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Sesión / login ────────────────────────────────────────── -->
+<div class="capa capa-centrada" id="capa-login" hidden>
+  <div class="dialogo dialogo-login" role="dialog" aria-modal="true" aria-labelledby="login-titulo">
+    <div class="login-marca" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 8.5 12 4l8 4.5v7L12 20l-8-4.5z"/><path d="M8 10.5v5M12 8.5v8M16 10.5v5"/>
+      </svg>
+    </div>
+    <h2 class="login-titulo" id="login-titulo">Camisas IUB</h2>
+    <p class="login-sub">Entra para usar la base de datos real. Sin sesión, trabajas en modo demostración.</p>
+    <p class="alerta" id="login-error" role="alert" hidden></p>
+    <form id="form-login" autocomplete="on">
+      <div class="lbi" id="lbi-correo">
+        <svg class="lbi-ring" viewBox="0 0 100 44" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M13 1.5 H87 A12.5 12.5 0 0 1 99.5 13 L99.5 31 A12.5 12.5 0 0 1 87 43.5 L13 43.5 A12.5 12.5 0 0 1 0.5 31 L0.5 13 A12.5 12.5 0 0 1 13 1.5 Z"/>
+        </svg>
+        <span class="lbi-band" aria-hidden="true"></span>
+        <input class="lbi-field" id="login-correo" type="email" autocomplete="username" inputmode="email" spellcheck="false">
+        <label class="lbi-label" for="login-correo">Correo</label>
+      </div>
+      <div class="lbi" id="lbi-clave">
+        <svg class="lbi-ring" viewBox="0 0 100 44" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M13 1.5 H87 A12.5 12.5 0 0 1 99.5 13 L99.5 31 A12.5 12.5 0 0 1 87 43.5 L13 43.5 A12.5 12.5 0 0 1 0.5 31 L0.5 13 A12.5 12.5 0 0 1 13 1.5 Z"/>
+        </svg>
+        <span class="lbi-band" aria-hidden="true"></span>
+        <input class="lbi-field" id="login-clave" type="password" autocomplete="current-password" spellcheck="false">
+        <label class="lbi-label" for="login-clave">Contraseña</label>
+        <button class="lbi-eye" id="login-ver" type="button" aria-label="Mostrar contraseña" aria-pressed="false" title="Mostrar contraseña">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/><path d="M4.5 4.5 19.5 19.5"/></svg>
+        </button>
+      </div>
+      <button class="btn btn-primaria btn-ancho" id="login-entrar" type="submit">Iniciar sesión</button>
+    </form>
+  </div>
+</div>
+
+<!-- ── Cargando (bloquea mientras trae datos) ────────────────── -->
+<div class="capa-capacidad" id="cargando-global" hidden>
+  <div class="cargando-caja">
+    <span class="spinner" aria-hidden="true"></span>
+    <p id="cargando-texto">Cargando…</p>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+<script src="app.js" defer></script>
+</body>
+</html>
