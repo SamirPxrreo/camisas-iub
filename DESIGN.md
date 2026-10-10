@@ -47,26 +47,32 @@ tipo (tamaño + peso), del color del acento y del espacio — no de borde tras b
 Estado por camisa (badge): `--st-pedido #475569`, `--st-comprado #4338CA`, `--st-bordando #B45309`,
 `--st-listo #0B6B74`, `--st-entregado #1B7F4B`, `--st-liquidado #334155`. Tinta del badge siempre `#FFFFFF`.
 
-### Dark `[data-theme="dark"]`
+### Dark `[data-theme="dark"]` — casi negro neutro Bencho
 
-| Token           | Value     | Note                                        |
-| --------------- | --------- | ------------------------------------------- |
-| `--bg`          | `#0C111B` | casi negro azulado                          |
-| `--surface`     | `#141C29` |                                             |
-| `--surface-2`   | `#1B2536` |                                             |
-| `--ink`         | `#EAEFF6` |                                             |
-| `--ink-2`       | `#AEBBCB` |                                             |
-| `--ink-3`       | `#8291A5` |                                             |
-| `--accent`      | `#46CBD6` | turquesa claro (invertido, no más brillante)|
-| `--accent-2`    | `#6FD9E2` |                                             |
-| `--accent-ink`  | `#06232A` | texto sobre acento: oscuro, no blanco       |
-| `--positivo`    | `#5FD08A` |                                             |
-| `--alerta`      | `#F0B060` |                                             |
-| `--peligro`     | `#F08A90` |                                             |
+| Token           | Value                     | Note                                        |
+| --------------- | ------------------------- | ------------------------------------------- |
+| `--bg`          | `#000000`                 | casi negro puro                            |
+| `--surface`     | `#0F0F0F`                 |                                             |
+| `--surface-2`   | `#181818`                 |                                             |
+| `--surface-3`   | `#202020`                 |                                             |
+| `--border`      | `rgba(255,255,255,.10)`   | líneas suaves                               |
+| `--border-fuerte` | `rgba(255,255,255,.18)` | bordes de inputs y botones fantasma        |
+| `--ink`         | `#FFFFFF`                 |                                             |
+| `--ink-2`       | `#B4B4B4`                 |                                             |
+| `--ink-3`       | `#9A9A9A`                 |                                             |
+| `--accent`      | `#46CBD6`                 | turquesa claro (invertido, no más brillante)|
+| `--accent-2`    | `#7FE3EA`                 | hover/focus                                 |
+| `--accent-soft` | `rgba(70,203,214,.16)`    | fondos tiza del acento                      |
+| `--accent-ink`  | `#06232A`                 | texto sobre acento: oscuro, no blanco       |
+| `--positivo`    | `#5FD08A`                 | `--positivo-soft #123227`                   |
+| `--alerta`      | `#FFB366`                 | `--alerta-soft #3A2A16`                     |
+| `--peligro`     | `#FF7A80`                 | `--peligro-soft #3A1A1E`                    |
+| `--focus`       | `#7FE3EA`                 | anillo `:focus-visible`                     |
 
-Estado por camisa (oscuro): tinta clara salvo en tonos saturados donde el texto pasa a oscuro
-(`--st-comprado-ink #0B1020`, `--st-bordando-ink #20140A`, `--st-listo-ink #06232A`, `--st-entregado-ink #062418`).
-`--st-liquidado` es `#64748B` con tinta blanca (4.76:1).
+Estado por camisa (oscuro): `--st-pedido #46566B` (ink `#EAF1F8`), `--st-comprado #6D74E8`
+(ink `#0B1020`), `--st-bordando #E0952F` (ink `#20140A`), `--st-listo #35B8C4` (ink `#06232A`),
+`--st-entregado #45C07C` (ink `#062418`), `--st-liquidado #64748B` (ink `#FFFFFF`, 4.76:1). Tinta clara
+salvo en los tonos saturados donde el texto pasa a oscuro.
 
 ## Typography Rules
 
@@ -128,10 +134,25 @@ Estado por camisa (oscuro): tinta clara salvo en tonos saturados donde el texto 
   (turquesa claro `#6FD9E2` en claro, `--accent-2` en dark). Duración 6.5s. `aria-live="polite"`.
 
 ### Navegación
-- Móvil: barra inferior fija 64px, 3 destinos + "Más" en hoja. La vista activa se pinta `--accent-2`.
-  El destino "Registrar" es la ÚNICA acción primaria del nav: icono "+" en burbuja de acento (34px).
-- Escritorio: barra lateral persistente; el botón "Más" desaparece y aparecen etiquetas `.nav-grupo`.
+- Móvil: dock flotante de cristal `.gnav` (pill `border-radius:999px`, elevado 14px sobre el borde inferior,
+  `backdrop-filter: blur(18px) saturate(1.5)`, `fit-content` centrado). 3 destinos (Inicio, Pedidos,
+  Registrar) + "Más". Un indicador `.nav-ind` se desliza bajo el destino activo (420ms spring, ancho
+  variable 66px). El activo se pinta `--accent-2`.
+- El destino "Registrar" es la ÚNICA acción primaria del nav: icono "+" en burbuja de acento (34px, 50%).
+- Escritorio (≥1024px): el dock se convierte en barra lateral sticky (columna, `topbar-alto`); el "Más"
+  desaparece y todas las vistas se listan una vez en `.nav-secundario` con etiquetas `.nav-grupo`
+  (Principal / Socios / Datos / Sistema). Ítems en fila, hover `--surface`, activo `--accent-2`.
 - Badges de conteo en `--accent`; el de papelera va en `--peligro`.
+
+### Sesión y conexión
+- Login obligatorio (v3): sin sesión, la app muestra el diálogo `.dialogo-login` (hoja centrada, máx 400px)
+  y no expone el resto. Chip `.usuario` en la topbar abre el login; punto `--positivo` en sesión vs `--ink-3`
+  invitado.
+- Input de etiqueta flotante `.lbi` estilo Bencho: campo de 44px con anillo SVG `.lbi-ring` (trazo, no
+  borde) que cambia a `--accent` al enfocar, banda `.lbi-band` que "abre" el anillo bajo la etiqueta y
+  `lbi-hop` por letra al subir (focus). Botón ojo `.lbi-eye` alterna mostrar/ocultar contraseña.
+- Banner `.banner-conexion` bajo la topbar: offline = `--peligro-soft`/`--peligro`, online (`.ok` reconecta)
+  = `--accent-soft`/`--accent-2`. Oculta con `[hidden]`.
 
 ### Gráfico 7 días
 - Barras `--accent` (hoy `--accent-2`), crecen 520ms desde la base con delay 34ms por columna, valor en mono
@@ -147,9 +168,10 @@ Estado por camisa (oscuro): tinta clara salvo en tonos saturados donde el texto 
 
 ## Depth & Elevation
 
-- `--sombra`: 0 1px 2px rgba(16,26,36,.06) + 0 8px 24px rgba(16,26,36,.06). Una sola sombra, discreta.
-- `--sombra-hoja`: 0 24px 64px (móvil, sheets) / 0 28px 72px (dark).
-- Topbar y nav: `color-mix(bg 86–94%) + backdrop-filter: saturate(1.4) blur(10–12px)` — elevación por
+- `--sombra`: claro `0 1px 2px rgba(16,26,36,.06) + 0 8px 24px rgba(16,26,36,.06)`; dark
+  `0 1px 0 rgba(255,255,255,.04) + 0 12px 32px rgba(0,0,0,.6)`. Una sola sombra, discreta.
+- `--sombra-hoja`: `0 24px 64px` (móvil, sheets) / `0 28px 72px` (dark).
+- Topbar: `color-mix(var(--bg) 86%) + backdrop-filter: saturate(1.4) blur(10px)`. Elevación por
   "vidrio" frontal, no por sombra.
 
 ## Do's and Don'ts (anti-cliché checklist)

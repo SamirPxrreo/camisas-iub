@@ -61,7 +61,7 @@ description: >-
 Cada vez que produzcas o edites interfaz, pásala por estos chequeos antes de entregar:
 
 ## Anti-slop (lo que NUNCA)
-- Fondos beige/crema (usar #EEF1F5/#0C111B). Sin gradientes, sin glass de adorno.
+- Fondos beige/crema (claro: `#EEF1F5`; dark casi negro Bencho `#000000`/`#0F0F0F`). Sin gradientes, sin glass de adorno.
 - Separar display en serif/cursiva (display = Archivo). Nunca letter-spacing exagerado en títulos.
 - "Chip soup": una sopa de píldoras sin foco. Cada badge/chip comunica UN dato útil.
 - "Cards in cards": más de un nivel de tarjeta anidada.
